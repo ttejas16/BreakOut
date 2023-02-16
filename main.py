@@ -5,7 +5,7 @@ clk=pygame.time.Clock()
 
 pygame.init()
 
-windowSize=(800,600)
+windowSize = (800,600)
 
 screen=pygame.display.set_mode(windowSize,0,32)
 pygame.display.set_caption("test")
@@ -14,9 +14,12 @@ display = pygame.Surface((400,300))
 
 sliderImg = pygame.image.load('slider.png')
 sliderImg.set_colorkey((255,255,255))
+
 sliderLoc = [40,290]
+
 sliderRect = pygame.Rect(sliderLoc[0],sliderLoc[1],sliderImg.get_width(),sliderImg.get_height())
-run=True
+
+run = True
 movingRight = False
 movingLeft = False
 
@@ -26,19 +29,19 @@ def moveSlider(slider,movement):
 
 def generateRects(y):
     rects = []
-    k=0
+    k = 0
     for i in range(17):
         rects.append(pygame.Rect(6+k*20+k*3,y,20,5))
         k+=1
-    k=0
+    k = 0
     for i in range(17):
         rects.append(pygame.Rect(6+k*20+k*3,y+10,20,5))
         k+=1
-    k=0
+    k = 0
     for i in range(17):
         rects.append(pygame.Rect(6+k*20+k*3,y+20,20,5))
         k+=1
-    k=0
+    k = 0
     for i in range(17):
         rects.append(pygame.Rect(6+k*20+k*3,y+30,20,5))
         k+=1
@@ -73,10 +76,10 @@ class Ball():
         if self.circle.colliderect(sliderRect):
             self.velocity[1] = -2
             
-    def checkBrickCollision(self,ballObj):
+    def checkBrickCollision(self):
         score = 0
         for brick in bricks:
-            if brick.colliderect(ballObj):
+            if brick.colliderect(self.circle):
                 score += 10
                 self.color = randomColor()
                 bricks.remove(brick)
@@ -89,8 +92,9 @@ class Ball():
         return score           
         
 Score = 0
+
 ball = Ball(25,100)
-# print(ball.x)
+
 font = pygame.font.Font('freesansbold.ttf', 32)
 text = font.render('Score : ', True,(255,255,255),(0,0,0))
 textRect = text.get_rect()
@@ -100,12 +104,12 @@ while run:
     display.fill((0,0,0)) #reset display
     display.blit(text, textRect)
 
-
     for brick in bricks:
-        pygame.draw.rect(display,(255,0,255),brick,0)
+        pygame.draw.rect(display,(255,140,0),brick,0)
 
     ballRect = ball.draw()
     ball.move()
+
     movement = [0,0]
 
     if movingRight and sliderRect.x <= 400 - 18 :
@@ -121,23 +125,26 @@ while run:
     sliderRect.y = sliderLoc[1]    
 
     ball.collide()
-    Score += ball.checkBrickCollision(ballRect)
+    Score += ball.checkBrickCollision()
+    
     if ball.y >= 299:
         text = font.render(('Your score was : %d'%(Score)), True,(255,255,255),(0,0,0))
         textRect = text.get_rect()
         textRect.center = ((400 // 2) - 5, 300 // 2)
     else:
         text = font.render(('Score : %d'%(Score)), True,(255,255,255),(0,0,0))
+
     for event in pygame.event.get():
         if event.type == QUIT:
-            # print(ball.velocity)
             pygame.quit()
             sys.exit()
+
         if event.type == KEYDOWN:
             if event.key == K_RIGHT:
                 movingRight = True
             if event.key == K_LEFT:
                 movingLeft = True
+
         if event.type == KEYUP:
             if event.key == K_RIGHT:
                 movingRight = False
