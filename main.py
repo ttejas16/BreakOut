@@ -8,7 +8,7 @@ pygame.init()
 windowSize = (800,600)
 
 screen=pygame.display.set_mode(windowSize,0,32)
-pygame.display.set_caption("test")
+pygame.display.set_caption("Bricks Out")
 
 display = pygame.Surface((400,300))
 
@@ -30,21 +30,14 @@ def moveSlider(slider,movement):
 def generateRects(y):
     rects = []
     k = 0
-    for i in range(17):
-        rects.append(pygame.Rect(6+k*20+k*3,y,20,5))
-        k+=1
-    k = 0
-    for i in range(17):
-        rects.append(pygame.Rect(6+k*20+k*3,y+10,20,5))
-        k+=1
-    k = 0
-    for i in range(17):
-        rects.append(pygame.Rect(6+k*20+k*3,y+20,20,5))
-        k+=1
-    k = 0
-    for i in range(17):
-        rects.append(pygame.Rect(6+k*20+k*3,y+30,20,5))
-        k+=1
+    level = 0
+    for _ in range(4):
+        for _ in range(17):
+            rects.append(pygame.Rect(6+k*20+k*3,y+level,20,5))
+            k+=1
+        k=0
+        level += 10
+        
     return rects
 bricks = generateRects(10)
 
@@ -94,6 +87,7 @@ class Ball():
 Score = 0
 
 ball = Ball(25,100)
+brickColor = (255,140,0)
 
 font = pygame.font.Font('freesansbold.ttf', 32)
 text = font.render('Score : ', True,(255,255,255),(0,0,0))
@@ -105,7 +99,7 @@ while run:
     display.blit(text, textRect)
 
     for brick in bricks:
-        pygame.draw.rect(display,(255,140,0),brick,0)
+        pygame.draw.rect(display,brickColor,brick,0)
 
     ballRect = ball.draw()
     ball.move()
